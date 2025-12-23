@@ -1,0 +1,23 @@
+# docker-compose.yml for local development (backend + streamlit monitor)
+
+version: '3.8'
+services:
+backend:
+build: .
+command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+ports:
+- "8000:8000"
+volumes:
+- ./:/app
+environment:
+- GEMINI_API_KEY=${GEMINI_API_KEY}
+
+monitor:
+build: .
+command: streamlit run app_monitor.py --server.port 8501 --server.address 0.0.0.0
+ports:
+- "8501:8501"
+volumes:
+- ./:/app
+environment:
+- BACKEND_URL=[http://backend:8000](http://backend:8000)

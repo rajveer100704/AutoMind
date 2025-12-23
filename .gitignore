@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# Logs
+logs/
+logs.log
+
+# ML / Experiment artifacts
+mlruns/
+artifacts/
+catboost_info/
+models/
+reports/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env

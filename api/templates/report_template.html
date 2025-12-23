@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AutoMind Report - {{ run_id }}</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 25px;
+        }
+
+        h1, h2, h3 {
+            color: #4fd2c2;
+            font-weight: 600;
+        }
+
+        .section {
+            background: #1e1e1e;
+            padding: 20px;
+            margin-bottom: 35px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            box-shadow: 0px 0px 10px rgba(79, 210, 194, 0.15);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: #181818;
+        }
+
+        th {
+            background: #222;
+            color: #4fd2c2;
+            padding: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #2e2e2e;
+            color: #dcdcdc;
+        }
+
+        pre {
+            background: #181818;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            color: #cfcfcf;
+            border: 1px solid #333;
+        }
+
+        .img-block {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .img-block img {
+            max-width: 90%;
+            border-radius: 8px;
+            border: 1px solid #333;
+            box-shadow: 0px 0px 15px rgba(79, 210, 194, 0.25);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>AutoMind DS-Agent — ML Report</h1>
+    <p><b>Run ID:</b> {{ run_id }}</p>
+
+    <!-- Dataset Summary -->
+    <div class="section">
+        <h2>📊 Dataset Summary</h2>
+        <p><b>Rows:</b> {{ meta.rows }}</p>
+        <p><b>Columns:</b> {{ meta.columns }}</p>
+        <p><b>Target Column:</b> {{ meta.target }}</p>
+        <p><b>Problem Type:</b> {{ meta.task_type }}</p>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="section">
+        <h2>🏆 Model Leaderboard</h2>
+
+        {% if leaderboard and leaderboard|length > 0 %}
+            {% set keys = leaderboard[0].keys() %}
+            <table>
+                <thead>
+                    <tr>
+                        {% for k in keys %}
+                            <th>{{ k }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for row in leaderboard %}
+                        <tr>
+                            {% for k in keys %}
+                                <td>{{ row[k] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No leaderboard available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Best Model -->
+    <div class="section">
+        <h2>🤖 Best Model</h2>
+        <pre>{{ best_model }}</pre>
+    </div>
+
+    <!-- Metrics -->
+    <div class="section">
+        <h2>📈 Model Evaluation Metrics</h2>
+        <pre>{{ metrics }}</pre>
+    </div>
+
+    <!-- Narrative -->
+    <div class="section">
+        <h2>📝 Narrative Summary</h2>
+        <p>{{ narrative }}</p>
+    </div>
+
+    <!-- SHAP -->
+    <div class="section">
+        <h2>🔍 Explainability (SHAP)</h2>
+        {% for img in shap_images %}
+            <div class="img-block">
+                <img src="data:image/png;base64,{{ img }}" />
+            </div>
+        {% endfor %}
+        {% if shap_images|length == 0 %}
+            <p>No SHAP results available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Evaluation Visuals -->
+    <div class="section">
+        <h2>📊 EDA / Evaluation Visuals</h2>
+        {% for img in evaluation_images %}
+            <div class="img-block">
+                <img src="data:image/png;base64,{{ img }}" />
+            </div>
+        {% endfor %}
+        {% if evaluation_images|length == 0 %}
+            <p>No evaluation visuals available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Notebook -->
+    <div class="section">
+        <h2>📓 Notebook</h2>
+        <p>A Jupyter Notebook documenting this run was generated.</p>
+    </div>
+
+</body>
+</html>
